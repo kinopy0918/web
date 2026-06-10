@@ -2,7 +2,9 @@
 
 HTML を GitHub Pages で公開するためのリポジトリ。
 
-- ここに置いた HTML/CSS/JS を push すると、`https://<ユーザー名>.github.io/<リポジトリ名>/` で閲覧できる。
+- **公開URL: https://kinopy0918.github.io/web/**
+- GitHubリポジトリ: https://github.com/kinopy0918/web
+- ここに置いた HTML/CSS/JS を push すると、上記URLで閲覧できる。
 - トップページは `index.html`。
 - 場所: `10_Dev/web/`（Obsidian vault 内 / Google Drive 同期）。
 
