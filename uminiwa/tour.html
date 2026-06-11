@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>海庭 uminiwa ｜ Virtual Tour</title>
+<meta name="description" content="別府湾を望む一棟貸し「海庭」を、部屋から部屋へ歩くように巡るバーチャルツアー。">
+<meta name="theme-color" content="#0c0b0a">
+<meta property="og:title" content="海庭 uminiwa ｜ Virtual Tour">
+<meta property="og:image" content="https://kinopy0918.github.io/web/assets/uminiwa/img-33.jpg">
+
+<!--
+  海庭 — 没入バーチャルツアー版（ICG Gallery 風）
+  ・平面写真でも“カメラが奥へ進む”ドリー＋モーションブラーで空間移動を擬似再現
+  ・中央レティクル / スクロール / 矢印キー / スワイプ で前進
+  差し替え: 予約リンク（data-book の href="#"）
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0b0a09;
+  --cream:#f2ebdd;
+  --muted:#a99d89;
+  --line:rgba(242,235,221,.26);
+  --gold:#cBa36a;
+  --serif:"Shippori Mincho B1",serif;
+  --sans:"Zen Kaku Gothic New",system-ui,-apple-system,sans-serif;
+  --latin:"Cormorant Garamond",serif;
+  --cine:cubic-bezier(.66,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--cream)}
+body{font-family:var(--sans);font-weight:300;-webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;touch-action:none;cursor:default}
+img{display:block}
+button{font-family:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+
+/* ---------- STAGE / DOLLY LAYERS ---------- */
+#stage{position:fixed;inset:0;z-index:1;background:#000}
+.stop{position:absolute;inset:0;opacity:0;transform:scale(1);filter:blur(0px);
+  will-change:transform,opacity,filter}
+.stop .kb{position:absolute;inset:-3%}
+.stop .kb img,.stop .kb video{width:100%;height:100%;object-fit:cover}
+.stop::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(8,7,6,.5),rgba(8,7,6,.05) 24%,rgba(8,7,6,.12) 60%,rgba(8,7,6,.74));}
+.stop.current{opacity:1}
+.stop.current .kb img{animation:idleKB 20s ease-in-out infinite alternate}
+@keyframes idleKB{from{transform:scale(1.0) translate(0,0)}to{transform:scale(1.085) translate(-1.6%,-1.1%)}}
+.stop.anim{transition:opacity 1.1s var(--cine),transform 1.18s var(--cine),filter 1.18s var(--cine)}
+.stop.enter-fwd{opacity:0;transform:scale(1.24);filter:blur(11px)}
+.stop.leave-fwd{opacity:0;transform:scale(1.5);filter:blur(18px)}
+.stop.enter-back{opacity:0;transform:scale(.82);filter:blur(9px)}
+.stop.leave-back{opacity:0;transform:scale(.9);filter:blur(11px)}
+
+/* ---------- HUD ---------- */
+.hud{position:fixed;inset:0;z-index:10;pointer-events:none;
+  transition:opacity 1s var(--cine)}
+.hud>*{pointer-events:auto}
+body.title-up .hud{opacity:0}
+
+/* top bar */
+.bar{position:fixed;left:0;right:0;top:0;display:flex;align-items:center;justify-content:space-between;
+  padding:1.5rem clamp(1.2rem,3.5vw,2.6rem);z-index:11}
+.bar::after{content:"";position:absolute;left:clamp(1.2rem,3.5vw,2.6rem);right:clamp(1.2rem,3.5vw,2.6rem);
+  bottom:0;height:1px;background:var(--line)}
+.brand{font-family:var(--serif);font-size:1.2rem;letter-spacing:.22em;display:flex;align-items:center;gap:.55em}
+.brand .star{color:var(--gold);font-size:.8em}
+.brand .en{font-family:var(--latin);font-style:italic;font-size:.78rem;letter-spacing:.2em;color:var(--muted)}
+.bar__center{position:absolute;left:50%;transform:translateX(-50%);
+  font-family:var(--latin);letter-spacing:.42em;text-transform:uppercase;font-size:.7rem;color:var(--muted)}
+.bar__nav{display:flex;align-items:center;gap:1.5rem}
+.bar__nav a{font-size:.78rem;letter-spacing:.16em;color:var(--cream);opacity:.85;position:relative;padding:.2em 0}
+.bar__nav a:hover{opacity:1}
+.bar__nav a::after{content:"";position:absolute;left:0;bottom:-3px;width:0;height:1px;background:var(--gold);transition:width .4s var(--cine)}
+.bar__nav a:hover::after{width:100%}
+.bar__nav .book{border:1px solid var(--line);border-radius:999px;padding:.5em 1.2em;letter-spacing:.18em}
+.bar__nav .book:hover{background:var(--cream);color:#111;border-color:var(--cream)}
+.bar__nav .book::after{display:none}
+
+/* center reticle */
+.reticle{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:11;
+  width:74px;height:74px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(242,235,221,.55);background:rgba(12,11,10,.18);
+  backdrop-filter:blur(2px);transition:transform .5s var(--cine),background .4s,border-color .4s;
+  animation:retPulse 3.4s ease-in-out infinite}
+.reticle:hover{transform:translate(-50%,-50%) scale(1.12);background:rgba(242,235,221,.16);border-color:var(--cream)}
+.reticle svg{width:20px;height:20px;stroke:var(--cream);fill:none;stroke-width:1.4}
+.reticle::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:1px solid rgba(242,235,221,.18);
+  animation:retRing 3.4s ease-out infinite}
+@keyframes retRing{0%{transform:scale(.9);opacity:.7}70%{opacity:0}100%{transform:scale(1.5);opacity:0}}
+@keyframes retPulse{0%,100%{box-shadow:0 0 0 0 rgba(242,235,221,0)}50%{box-shadow:0 0 30px 0 rgba(242,235,221,.06)}}
+.reticle__hint{position:absolute;top:88px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-family:var(--latin);letter-spacing:.32em;text-transform:uppercase;font-size:.62rem;color:var(--muted);
+  opacity:0;transition:opacity .4s}
+.reticle:hover .reticle__hint{opacity:1}
+
+/* side prev/next */
+.edge{position:fixed;top:50%;transform:translateY(-50%);z-index:11;width:54px;height:54px;border-radius:50%;
+  display:grid;place-items:center;color:var(--cream);opacity:.4;transition:opacity .4s,background .4s;font-size:1.6rem;
+  font-family:var(--latin)}
+.edge:hover{opacity:1;background:rgba(242,235,221,.08)}
+.edge--prev{left:clamp(.6rem,2vw,1.6rem)}
+.edge--next{right:clamp(.6rem,2vw,1.6rem)}
+
+/* bottom bar */
+.foot{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:flex-end;justify-content:space-between;
+  padding:clamp(1.1rem,3vw,2.2rem) clamp(1.2rem,3.5vw,2.6rem);z-index:11;gap:1rem}
+.caption{position:fixed;left:0;right:0;bottom:clamp(3.6rem,8vw,5.4rem);text-align:center;z-index:11;pointer-events:none}
+.caption .jp{font-family:var(--serif);font-size:clamp(1.5rem,3.4vw,2.3rem);letter-spacing:.14em;
+  text-shadow:0 2px 30px rgba(0,0,0,.6)}
+.caption .en{font-family:var(--latin);font-style:italic;letter-spacing:.26em;color:var(--muted);font-size:.92rem;margin-top:.2em}
+.caption.show .jp,.caption.show .en{animation:capUp 1s var(--cine)}
+@keyframes capUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* rooms selector (bottom-left) */
+.rooms{position:relative}
+.rooms__toggle{display:flex;align-items:center;gap:.6em;font-family:var(--latin);letter-spacing:.26em;
+  text-transform:uppercase;font-size:.72rem;color:var(--cream)}
+.rooms__toggle .ic{width:16px;height:13px;display:inline-grid;grid-template-rows:1fr 1fr 1fr;gap:2px}
+.rooms__toggle .ic i{display:block;height:1px;background:var(--cream)}
+.rooms__panel{position:absolute;left:0;bottom:2.4rem;width:min(76vw,290px);max-height:56vh;overflow:auto;
+  background:rgba(11,10,9,.82);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:4px;
+  padding:.5rem;opacity:0;visibility:hidden;transform:translateY(10px);transition:.45s var(--cine);scrollbar-width:none}
+.rooms__panel::-webkit-scrollbar{display:none}
+.rooms__panel.open{opacity:1;visibility:visible;transform:none}
+.rooms__item{display:flex;align-items:center;gap:1em;width:100%;text-align:left;padding:.62rem .8rem;border-radius:3px;
+  font-size:.92rem;letter-spacing:.06em;transition:background .3s}
+.rooms__item:hover{background:rgba(242,235,221,.08)}
+.rooms__item.on{background:rgba(201,163,106,.16)}
+.rooms__item .rn{font-family:var(--latin);font-style:italic;color:var(--gold);font-size:.85rem;min-width:1.8em}
+
+/* counter + lang (bottom-right) */
+.meta{display:flex;align-items:center;gap:1.4rem;text-align:right}
+.counter{font-family:var(--latin);letter-spacing:.22em;font-size:.92rem}
+.counter .of{color:var(--muted)}
+.lang{font-family:var(--latin);letter-spacing:.2em;font-size:.74rem;color:var(--muted)}
+.hint{font-size:.66rem;letter-spacing:.18em;color:var(--muted);opacity:.8}
+
+/* progress line */
+.prog{position:fixed;left:0;bottom:0;height:2px;width:100%;background:rgba(242,235,221,.12);z-index:12}
+.prog__fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),#e7d3ad);transition:width 1.1s var(--cine)}
+
+/* ---------- TITLE CARD ---------- */
+.title{position:fixed;inset:0;z-index:30;display:grid;place-items:center;text-align:center;
+  background:radial-gradient(120% 90% at 50% 40%,rgba(8,7,6,.35),rgba(8,7,6,.78));
+  transition:opacity 1.2s var(--cine),visibility 1.2s}
+.title.gone{opacity:0;visibility:hidden}
+.title__in{padding:2rem}
+.title .kick{font-family:var(--latin);letter-spacing:.5em;text-transform:uppercase;font-size:.76rem;color:var(--muted);
+  opacity:0;animation:tUp 1.2s var(--cine) .2s forwards}
+.title h1{font-family:var(--serif);font-weight:600;font-size:clamp(4.5rem,16vw,10rem);letter-spacing:.16em;
+  text-indent:.16em;line-height:1;margin:.12em 0;text-shadow:0 6px 50px rgba(0,0,0,.5);
+  opacity:0;animation:tUp 1.5s var(--cine) .4s forwards}
+.title .sub{font-family:var(--latin);font-style:italic;letter-spacing:.4em;text-indent:.4em;font-size:clamp(1rem,2.4vw,1.5rem);
+  opacity:0;animation:tUp 1.5s var(--cine) .6s forwards}
+.title .tag{margin-top:1.4em;letter-spacing:.3em;text-indent:.3em;font-size:clamp(.85rem,1.5vw,1rem);color:#ddd3c2;
+  opacity:0;animation:tUp 1.5s var(--cine) .82s forwards}
+.title .enter{margin-top:2.8em;display:inline-flex;align-items:center;gap:.8em;
+  border:1px solid var(--line);border-radius:999px;padding:.95em 2.2em;letter-spacing:.24em;font-size:.82rem;
+  transition:all .45s var(--cine);opacity:0;animation:tUp 1.5s var(--cine) 1s forwards}
+.title .enter:hover{background:var(--cream);color:#111;border-color:var(--cream);gap:1.2em}
+.title .alt{display:block;margin-top:1.8em;font-size:.74rem;letter-spacing:.2em;color:var(--muted);text-decoration:underline;
+  text-underline-offset:4px;opacity:0;animation:tUp 1.5s var(--cine) 1.18s forwards}
+.title .alt:hover{color:var(--cream)}
+@keyframes tUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+/* ---------- END CARD ---------- */
+.end{position:fixed;inset:0;z-index:30;display:grid;place-items:center;text-align:center;
+  background:radial-gradient(120% 90% at 50% 45%,rgba(8,7,6,.55),rgba(8,7,6,.88));
+  opacity:0;visibility:hidden;transition:opacity 1s var(--cine),visibility 1s}
+.end.show{opacity:1;visibility:visible}
+.end .kick{font-family:var(--latin);letter-spacing:.46em;text-transform:uppercase;font-size:.74rem;color:var(--muted)}
+.end h2{font-family:var(--serif);font-weight:500;font-size:clamp(2rem,5vw,3.4rem);letter-spacing:.08em;margin:.4em 0 1.4em}
+.end__btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.end__btns a{border:1px solid var(--line);border-radius:999px;padding:.9em 2em;letter-spacing:.2em;font-size:.82rem;transition:all .4s var(--cine)}
+.end__btns a.solid{background:var(--cream);color:#111;border-color:var(--cream)}
+.end__btns a:hover{background:var(--gold);color:#111;border-color:var(--gold)}
+.end__restart{margin-top:1.8em;font-size:.74rem;letter-spacing:.2em;color:var(--muted);text-decoration:underline;text-underline-offset:4px}
+
+/* ---------- GRAIN + VIGNETTE ---------- */
+.vig{position:fixed;inset:0;z-index:9;pointer-events:none;
+  box-shadow:inset 0 0 200px 40px rgba(0,0,0,.5)}
+.grain{position:fixed;inset:0;z-index:13;pointer-events:none;opacity:.045;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* loader */
+.loader{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:var(--bg);transition:opacity .8s}
+.loader.gone{opacity:0;visibility:hidden}
+.loader .l{font-family:var(--serif);letter-spacing:.4em;text-indent:.4em;font-size:1.6rem;animation:lpulse 1.6s ease-in-out infinite}
+@keyframes lpulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* responsive */
+@media(max-width:760px){
+  .bar__nav a:not(.book){display:none}
+  .bar__center{display:none}
+  .hint{display:none}
+  .reticle{width:62px;height:62px}
+  .edge{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .stop.current .kb{animation:none}
+  .stop.anim{transition:opacity .6s linear}
+  .stop.enter-fwd,.stop.enter-back{transform:none;filter:none}
+  .stop.leave-fwd,.stop.leave-back{transform:none;filter:none}
+  .reticle,.reticle::before{animation:none}
+}
+</style>
+</head>
+<body class="title-up">
+
+<div class="loader" id="loader"><div class="l">海庭</div></div>
+
+<div id="stage"></div>
+
+<div class="vig"></div>
+
+<!-- HUD -->
+<div class="hud" id="hud">
+  <div class="bar">
+    <a href="index.html" class="brand"><span class="star">✦</span>海庭<span class="en">uminiwa</span></a>
+    <div class="bar__center">Virtual Tour</div>
+    <nav class="bar__nav">
+      <a href="#" data-go="1">眺め</a>
+      <a href="#" data-go="3">部屋</a>
+      <a href="#" data-go="9">庭</a>
+      <a href="scroll.html#access">アクセス</a>
+      <a href="#" class="book" data-book>予約</a>
+    </nav>
+  </div>
+
+  <button class="edge edge--prev" id="navPrev" aria-label="前へ">‹</button>
+  <button class="edge edge--next" id="navNext" aria-label="次へ">›</button>
+
+  <button class="reticle" id="reticle" aria-label="次の空間へ">
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    <span class="reticle__hint">クリック / スクロールで進む</span>
+  </button>
+
+  <div class="caption show" id="caption">
+    <div class="jp" id="capJ">別府湾を望む</div>
+    <div class="en" id="capE">The Bay</div>
+  </div>
+
+  <div class="foot">
+    <div class="rooms">
+      <button class="rooms__toggle" id="roomsToggle"><span class="ic"><i></i><i></i><i></i></span>Rooms</button>
+      <div class="rooms__panel" id="roomsPanel"><div id="roomsList"></div></div>
+    </div>
+    <div class="meta">
+      <span class="hint">クリック・スクロール・矢印キーで巡る</span>
+      <span class="counter" id="counter">01 <span class="of">/ 12</span></span>
+      <span class="lang">JA</span>
+    </div>
+  </div>
+
+  <div class="prog"><div class="prog__fill" id="progFill"></div></div>
+</div>
+
+<!-- TITLE CARD -->
+<div class="title" id="title">
+  <div class="title__in">
+    <div class="kick">Beppu · Private Villa</div>
+    <h1>海庭</h1>
+    <div class="sub">uminiwa</div>
+    <div class="tag">別府湾を望む一棟貸しを、歩いて巡る。</div>
+    <button class="enter" id="startBtn">ツアーを始める <span>▷</span></button>
+    <a class="alt" href="scroll.html">スクロール版で観る →</a>
+  </div>
+</div>
+
+<!-- END CARD -->
+<div class="end" id="end">
+  <div class="title__in">
+    <div class="kick">Stay with us</div>
+    <h2>海と庭で過ごす休日を。</h2>
+    <div class="end__btns">
+      <a href="#" class="solid" data-book>ご予約・お問い合わせ</a>
+      <a href="scroll.html#access">アクセスを見る</a>
+    </div>
+    <button class="end__restart" id="endRestart">もう一度、最初から巡る</button>
+  </div>
+</div>
+
+<div class="grain"></div>
+
+<script>
+(function(){
+  /* curated 12 stops — 全カットは使わず厳選 */
+  const STOPS=[
+    {n:33, jp:'海庭へ',          en:'Arrival'},
+    {n:6,  jp:'別府湾を望む',    en:'The Bay'},
+    {n:40, jp:'海の見える窓辺',  en:'Sea Window'},
+    {n:23, jp:'リビング',        en:'Living Room'},
+    {n:42, jp:'ダイニング',      en:'Dining'},
+    {n:9,  jp:'キッチン',        en:'Kitchen'},
+    {n:16, jp:'和室',            en:'Tatami Room'},
+    {n:3,  jp:'二間続きの和室',  en:'Second Room'},
+    {n:19, jp:'桜と海',          en:'Cherry & Sea'},
+    {n:5,  jp:'春の庭',          en:'Spring Garden'},
+    {n:1,  jp:'しつらえ',        en:'The Details'},
+    {n:2,  jp:'暮れゆく海岸線',  en:'Dusk by the Sea'},
+  ];
+  const pad=n=>String(n).padStart(2,'0');
+  const vsrc=n=>'../assets/uminiwa/video/img-'+pad(n)+'.mp4';
+  const psrc=n=>'../assets/uminiwa/thumb/img-'+pad(n)+'.jpg';
+
+  const stage=document.getElementById('stage');
+  const layers=STOPS.map((s,i)=>{
+    const d=document.createElement('div');d.className='stop';d.dataset.i=i;
+    const kb=document.createElement('div');kb.className='kb';
+    const v=document.createElement('video');
+    v.src=vsrc(s.n);v.poster=psrc(s.n);
+    v.muted=true;v.loop=true;v.playsInline=true;v.preload=(i<2?'auto':'none');
+    v.setAttribute('playsinline','');v.setAttribute('disablepictureinpicture','');
+    kb.appendChild(v);d.appendChild(kb);stage.appendChild(d);
+    d._v=v;return d;
+  });
+
+  let cur=0,busy=false;
+  layers[0].classList.add('current');
+
+  const capWrap=document.getElementById('caption'),
+        capJ=document.getElementById('capJ'),capE=document.getElementById('capE'),
+        counter=document.getElementById('counter'),progFill=document.getElementById('progFill');
+
+  // rooms list
+  const roomsList=document.getElementById('roomsList');
+  STOPS.forEach((s,i)=>{
+    const b=document.createElement('button');b.className='rooms__item';
+    b.innerHTML='<span class="rn">'+pad(i+1)+'</span><span>'+s.jp+'</span>';
+    b.addEventListener('click',()=>{goTo(i);roomsPanel.classList.remove('open');});
+    roomsList.appendChild(b);
+  });
+  const roomItems=[...roomsList.children];
+
+  function setHUD(i){
+    capJ.textContent=STOPS[i].jp;capE.textContent=STOPS[i].en;
+    counter.innerHTML=pad(i+1)+' <span class="of">/ '+pad(STOPS.length)+'</span>';
+    capWrap.classList.remove('show');void capWrap.offsetWidth;capWrap.classList.add('show');
+    progFill.style.width=(i/(STOPS.length-1)*100)+'%';
+    roomItems.forEach((el,idx)=>el.classList.toggle('on',idx===i));
+  }
+  setHUD(0);
+
+  function transition(from,to,dir){
+    busy=true;
+    const a=layers[from],b=layers[to];
+    b.style.zIndex='2';a.style.zIndex='1';
+    try{b._v.currentTime=0;b._v.play().catch(()=>{});}catch(e){}
+    b.classList.remove('current','anim','leave-fwd','leave-back','enter-fwd','enter-back');
+    b.classList.add(dir>0?'enter-fwd':'enter-back');
+    void b.offsetWidth;                          // reflow → lock start state
+    b.classList.add('anim');
+    b.classList.remove('enter-fwd','enter-back');
+    b.classList.add('current');
+    a.classList.add('anim');
+    a.classList.remove('current');
+    a.classList.add(dir>0?'leave-fwd':'leave-back');
+    setHUD(to);
+    clearTimeout(transition._t);
+    transition._t=setTimeout(()=>{
+      a.classList.remove('anim','leave-fwd','leave-back');a.style.zIndex='';
+      b.classList.remove('anim');b.style.zIndex='';
+      try{a._v.pause();}catch(e){}
+      cur=to;busy=false;
+    },1200);
+  }
+  function go(dir){
+    if(busy)return;
+    const next=cur+dir;
+    if(next<0)return;
+    if(next>=STOPS.length){showEnd();return;}
+    transition(cur,next,dir);
+  }
+  function goTo(t){
+    if(busy||t===cur||t<0||t>=STOPS.length)return;
+    if(titleUp)startTour();
+    transition(cur,t,t>cur?1:-1);
+  }
+
+  /* controls */
+  document.getElementById('reticle').addEventListener('click',()=>go(1));
+  document.getElementById('navNext').addEventListener('click',()=>go(1));
+  document.getElementById('navPrev').addEventListener('click',()=>go(-1));
+
+  const roomsPanel=document.getElementById('roomsPanel');
+  document.getElementById('roomsToggle').addEventListener('click',()=>roomsPanel.classList.toggle('open'));
+
+  document.querySelectorAll('[data-go]').forEach(el=>el.addEventListener('click',e=>{
+    e.preventDefault();goTo(parseInt(el.dataset.go,10));
+  }));
+
+  let wheelLock=false;
+  window.addEventListener('wheel',e=>{
+    if(titleUp||endUp)return;
+    if(Math.abs(e.deltaY)<16&&Math.abs(e.deltaX)<16)return;
+    if(wheelLock||busy)return;
+    wheelLock=true;setTimeout(()=>wheelLock=false,820);
+    go((e.deltaY>0||e.deltaX>0)?1:-1);
+  },{passive:true});
+
+  let tsX=0,tsY=0;
+  window.addEventListener('touchstart',e=>{tsX=e.touches[0].clientX;tsY=e.touches[0].clientY;},{passive:true});
+  window.addEventListener('touchend',e=>{
+    if(titleUp||endUp)return;
+    const dx=e.changedTouches[0].clientX-tsX,dy=e.changedTouches[0].clientY-tsY;
+    if(Math.max(Math.abs(dx),Math.abs(dy))<42)return;
+    if(Math.abs(dy)>Math.abs(dx))go(dy<0?1:-1);else go(dx<0?1:-1);
+  },{passive:true});
+
+  window.addEventListener('keydown',e=>{
+    if(titleUp){if(e.key==='Enter'||e.key===' ')startTour();return;}
+    if(endUp){if(e.key==='Escape'){hideEnd();}return;}
+    if(['ArrowRight','ArrowDown',' ','Enter'].includes(e.key)){e.preventDefault();go(1);}
+    else if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();go(-1);}
+    else if(e.key==='Escape'){location.href='index.html';}
+  });
+
+  /* title / end */
+  let titleUp=true,endUp=false;
+  const title=document.getElementById('title'),endCard=document.getElementById('end');
+  function playOnly(i){layers.forEach((l,idx)=>{const v=l._v;if(!v)return;if(idx===i){try{v.currentTime=0;v.play().catch(()=>{});}catch(e){}}else{v.pause();}});}
+  function startTour(){if(!titleUp)return;titleUp=false;document.body.classList.remove('title-up');title.classList.add('gone');playOnly(cur);}
+  document.getElementById('startBtn').addEventListener('click',startTour);
+  function showEnd(){endUp=true;endCard.classList.add('show');}
+  function hideEnd(){endUp=false;endCard.classList.remove('show');}
+  document.getElementById('endRestart').addEventListener('click',()=>{hideEnd();goTo(0);});
+
+  /* loader: hide once first clip can play (poster shows immediately anyway) */
+  const v0=layers[0]._v;
+  function hideLoader(){document.getElementById('loader').classList.add('gone');}
+  if(v0.readyState>=2)hideLoader();
+  v0.addEventListener('loadeddata',hideLoader);
+  v0.addEventListener('error',hideLoader);
+  setTimeout(hideLoader,2500); // fail-safe
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>海庭 uminiwa｜別府湾を望む一棟貸しの宿</title>
+<meta name="description" content="別府湾を見下ろす高台に佇む、一棟貸しの宿「海庭（うみにわ）」。窓いっぱいの海、四季をうつす庭、時を重ねた古い家。">
+<meta name="theme-color" content="#0c0b0a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="海庭 uminiwa｜別府湾を望む一棟貸しの宿">
+<meta property="og:description" content="海を眺め、庭に憩う。別府の高台、一棟貸しの隠れ家。">
+<meta property="og:image" content="https://kinopy0918.github.io/web/assets/uminiwa/img-06.jpg">
+
+<!-- 差し替え: #book の予約/お問い合わせ href, #access の住所・所要時間 -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0c0b0a;
+  --bg-2:#141210;
+  --cream:#efe7d8;
+  --muted:#9c917e;
+  --line:rgba(239,231,216,.16);
+  --gold:#c9a36a;
+  --serif:"Shippori Mincho B1",serif;
+  --sans:"Zen Kaku Gothic New",system-ui,-apple-system,sans-serif;
+  --latin:"Cormorant Garamond",serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--cream);background:var(--bg);line-height:1.9;font-weight:300;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+section{position:relative}
+.wrap{max-width:1240px;margin:0 auto;padding:clamp(5rem,12vw,9rem) clamp(1.4rem,5vw,3.4rem)}
+
+.kicker{font-family:var(--latin);font-size:.82rem;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--gold);font-weight:500;margin-bottom:1.4em;padding-left:.42em}
+h2.head{font-family:var(--serif);font-weight:500;font-size:clamp(1.9rem,5vw,3.4rem);line-height:1.42;letter-spacing:.04em}
+.lead{font-size:clamp(.98rem,1.4vw,1.08rem);font-weight:300;letter-spacing:.04em;color:#cdc3b1;margin-top:1.8em;max-width:38em}
+
+/* NAV */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:1.5rem clamp(1.2rem,4vw,3rem);transition:.5s var(--ease);color:#fff}
+.nav.scrolled{background:rgba(12,11,10,.82);backdrop-filter:blur(12px);padding-top:.95rem;padding-bottom:.95rem;
+  box-shadow:0 1px 0 var(--line)}
+.nav__logo{font-family:var(--serif);font-size:1.5rem;font-weight:600;letter-spacing:.22em;padding-left:.22em;display:flex;align-items:center;gap:.4em}
+.nav__logo .star{color:var(--gold);font-size:.7em}
+.nav__links{display:flex;gap:2rem;align-items:center}
+.nav__links a{font-size:.8rem;letter-spacing:.18em;position:relative;padding:.2em 0;opacity:.9}
+.nav__links a:hover{opacity:1}
+.nav__links a::after{content:"";position:absolute;left:0;bottom:-2px;width:0;height:1px;background:var(--gold);transition:width .4s var(--ease)}
+.nav__links a:hover::after{width:100%}
+.btn{display:inline-block;font-size:.8rem;letter-spacing:.18em;font-weight:400;border:1px solid currentColor;
+  border-radius:999px;padding:.62em 1.5em;transition:all .4s var(--ease)}
+.btn::after{display:none}
+.nav .btn:hover{background:var(--cream);color:#111;border-color:var(--cream)}
+.nav__tour{color:var(--gold)!important}
+.nav__toggle{display:none;background:none;border:0;color:inherit;cursor:pointer;width:30px;height:22px;position:relative}
+.nav__toggle span{position:absolute;left:0;width:100%;height:1.5px;background:currentColor;transition:.4s var(--ease)}
+.nav__toggle span:nth-child(1){top:2px}.nav__toggle span:nth-child(2){top:10px}.nav__toggle span:nth-child(3){top:18px}
+
+/* HERO */
+.hero{height:100svh;min-height:560px;position:relative;overflow:hidden;background:#000}
+.hero__slide{position:absolute;inset:0;opacity:0;background-size:cover;background-position:center;
+  animation:heroKB 28s linear infinite;will-change:opacity,transform}
+.hero__slide:nth-child(1){animation-delay:0s}.hero__slide:nth-child(2){animation-delay:7s}
+.hero__slide:nth-child(3){animation-delay:14s}.hero__slide:nth-child(4){animation-delay:21s}
+@keyframes heroKB{0%{opacity:0;transform:scale(1.04)}3.5%{opacity:1}21%{opacity:1}25%{opacity:0;transform:scale(1.15)}100%{opacity:0;transform:scale(1.15)}}
+.hero__scrim{position:absolute;inset:0;z-index:2;
+  background:linear-gradient(180deg,rgba(8,7,6,.5),rgba(8,7,6,.05) 28%,rgba(8,7,6,.15) 62%,rgba(8,7,6,.82))}
+.hero__inner{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:0 1.5rem}
+.hero__kicker{font-family:var(--latin);letter-spacing:.5em;text-transform:uppercase;font-size:.8rem;font-weight:500;opacity:0;animation:fadeUp 1.4s var(--ease) .3s forwards;text-indent:.5em}
+.hero__title{font-family:var(--serif);font-weight:600;font-size:clamp(4.4rem,17vw,12rem);letter-spacing:.16em;line-height:1;text-indent:.16em;margin:.12em 0 .08em;text-shadow:0 4px 50px rgba(0,0,0,.5);opacity:0;animation:fadeUp 1.7s var(--ease) .55s forwards}
+.hero__sub{font-family:var(--latin);font-style:italic;font-size:clamp(1.1rem,2.4vw,1.7rem);letter-spacing:.35em;text-indent:.35em;opacity:0;animation:fadeUp 1.7s var(--ease) .8s forwards}
+.hero__tag{margin-top:1.8em;font-size:clamp(.92rem,1.5vw,1.05rem);letter-spacing:.32em;text-indent:.32em;opacity:0;animation:fadeUp 1.7s var(--ease) 1.05s forwards}
+.hero__cta{margin-top:2.4em;display:inline-flex;gap:.7em;align-items:center;border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:.85em 2em;font-size:.8rem;letter-spacing:.22em;opacity:0;animation:fadeUp 1.7s var(--ease) 1.25s forwards;transition:all .4s var(--ease)}
+.hero__cta:hover{background:#fff;color:#111;border-color:#fff;gap:1.1em}
+.hero__scroll{position:absolute;left:50%;bottom:2.2rem;transform:translateX(-50%);z-index:3;color:#fff;font-family:var(--latin);font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;text-align:center;opacity:0;animation:fadeUp 1.7s var(--ease) 1.45s forwards}
+.hero__scroll::after{content:"";display:block;width:1px;height:46px;margin:.9em auto 0;background:linear-gradient(#fff,transparent);animation:scrollLine 2.4s var(--ease) infinite}
+@keyframes scrollLine{0%{transform:scaleY(0);transform-origin:top}40%{transform:scaleY(1);transform-origin:top}60%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+/* CONCEPT */
+.concept{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,6vw,5.5rem);align-items:center}
+.concept__media{position:relative;overflow:hidden}
+.concept__media img{width:100%;height:100%;object-fit:cover;aspect-ratio:3/4;transform:scale(1.01);transition:transform 1.6s var(--ease)}
+.concept__media:hover img{transform:scale(1.06)}
+.concept__media figcaption{position:absolute;left:1.1rem;bottom:1rem;color:#fff;font-family:var(--latin);letter-spacing:.25em;font-size:.78rem;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.concept p+p{margin-top:1.1em}
+
+/* CINEMATIC SCENE */
+.scene{height:100svh;min-height:560px;overflow:hidden;position:relative;display:flex;align-items:flex-end}
+.scene__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kenburns 26s var(--ease) infinite alternate;will-change:transform}
+.scene--b .scene__bg{animation-name:kenburnsB}
+.scene--c .scene__bg{animation-name:kenburnsC}
+@keyframes kenburns{from{transform:scale(1.04) translate(0,0)}to{transform:scale(1.17) translate(-2.5%,-1.5%)}}
+@keyframes kenburnsB{from{transform:scale(1.17) translate(2%,1%)}to{transform:scale(1.04) translate(0,0)}}
+@keyframes kenburnsC{from{transform:scale(1.05) translate(1%,-1%)}to{transform:scale(1.18) translate(-1.5%,1.5%)}}
+.scene__scrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,7,6,.42),rgba(8,7,6,0) 35%,rgba(8,7,6,.15) 60%,rgba(8,7,6,.85))}
+.scene__copy{position:relative;z-index:2;color:#fff;padding:clamp(2.4rem,7vw,6rem) clamp(1.4rem,5vw,4.5rem);max-width:780px}
+.scene__copy .lead{color:#e6ddcd}
+
+/* PAIR / TRIO / RAIL */
+.section-head{margin-bottom:clamp(2.4rem,5vw,3.6rem)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1rem,3vw,2rem)}
+.pair figure{position:relative;overflow:hidden}
+.pair img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;transform:scale(1.01);transition:transform 1.6s var(--ease)}
+.pair figure:hover img{transform:scale(1.07)}
+.pair figcaption{position:absolute;left:1rem;bottom:.9rem;color:#fff;font-size:.78rem;letter-spacing:.16em;text-shadow:0 2px 12px rgba(0,0,0,.6)}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(1rem,3vw,2rem);margin-top:3rem}
+.trio figure{overflow:hidden}
+.trio img{width:100%;height:100%;object-fit:cover;aspect-ratio:3/4;transform:scale(1.02);transition:transform 1.8s var(--ease)}
+.trio figure:hover img{transform:scale(1.09)}
+.rail__hint{font-family:var(--latin);font-size:.72rem;letter-spacing:.28em;color:var(--muted);text-transform:uppercase;text-align:right;max-width:1240px;margin:0 auto;padding:0 clamp(1.4rem,5vw,3.4rem)}
+.rail{display:flex;gap:1.4rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:clamp(2.2rem,5vw,3.4rem) clamp(1.4rem,5vw,3.4rem) clamp(4rem,9vw,6rem);-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rail__card{flex:0 0 auto;width:min(78vw,440px);scroll-snap-align:center}
+.rail__card figure{overflow:hidden;position:relative}
+.rail__card img{width:100%;height:560px;object-fit:cover;transform:scale(1.02);transition:transform 1.4s var(--ease)}
+.rail__card:hover img{transform:scale(1.08)}
+.rail__card h3{font-family:var(--serif);font-weight:500;font-size:1.25rem;letter-spacing:.12em;margin-top:1.1rem}
+.rail__card .en{font-family:var(--latin);font-style:italic;color:var(--muted);font-size:.92rem;letter-spacing:.1em}
+
+/* DETAIL */
+.detail{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(2rem,6vw,5rem);align-items:center}
+.detail__media{overflow:hidden}
+.detail__media img{width:100%;height:100%;object-fit:cover;aspect-ratio:3/2;transform:scale(1.02);transition:transform 1.8s var(--ease)}
+.detail__media:hover img{transform:scale(1.08)}
+
+/* GALLERY */
+.gallery{columns:3;column-gap:14px}
+.gallery img{width:100%;margin-bottom:14px;break-inside:avoid;cursor:pointer;opacity:0;transform:translateY(20px);transition:opacity .6s var(--ease),transform .7s var(--ease),filter .4s}
+.gallery img.in{opacity:1;transform:none}
+.gallery img:hover{filter:brightness(1.08)}
+
+/* ACCESS */
+.access{position:relative;overflow:hidden;background:#000}
+.access__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kenburns 28s var(--ease) infinite alternate;opacity:.34}
+.access .wrap{position:relative;z-index:2}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2.4rem;margin-top:3rem;border-top:1px solid var(--line);padding-top:2.6rem}
+.info dt{font-family:var(--latin);letter-spacing:.26em;text-transform:uppercase;font-size:.72rem;color:var(--gold);margin-bottom:.7em}
+.info dd{font-size:1.02rem;font-weight:300;letter-spacing:.05em}
+
+/* CTA */
+.cta{background:var(--bg-2);text-align:center}
+.cta .wrap{display:flex;flex-direction:column;align-items:center}
+.cta__btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;margin-top:2.6rem}
+.cta .btn{font-size:.86rem;padding:.9em 2.2em}
+.cta .btn--solid{background:var(--cream);color:#111;border-color:var(--cream)}
+.cta .btn--solid:hover{background:var(--gold);border-color:var(--gold)}
+.cta .btn--ghost{border-color:var(--line)}
+.cta .btn--ghost:hover{background:var(--cream);color:#111;border-color:var(--cream)}
+
+/* FOOTER */
+footer{background:#000;color:#9c907c;text-align:center;padding:4rem 1.5rem 3rem}
+footer .mark{font-family:var(--serif);color:var(--cream);font-size:1.7rem;letter-spacing:.24em;text-indent:.24em}
+footer .en{font-family:var(--latin);font-style:italic;letter-spacing:.3em;font-size:.9rem;margin-top:.4em}
+footer .meta{margin-top:1.6em;font-size:.78rem;letter-spacing:.12em;line-height:2.1}
+footer a{color:var(--gold)}
+
+/* REVEAL + GRAIN + LIGHTBOX */
+[data-reveal]{opacity:0;transform:translateY(30px);transition:opacity 1.2s var(--ease),transform 1.2s var(--ease)}
+[data-reveal].in{opacity:1;transform:none}
+[data-reveal][data-delay="1"]{transition-delay:.12s}[data-reveal][data-delay="2"]{transition-delay:.24s}[data-reveal][data-delay="3"]{transition-delay:.36s}
+.grain{position:fixed;inset:0;z-index:60;pointer-events:none;opacity:.05;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.lb{position:fixed;inset:0;z-index:90;background:rgba(8,7,6,.97);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .4s var(--ease)}
+.lb.open{opacity:1;visibility:visible}
+.lb img{max-width:92vw;max-height:88vh;object-fit:contain;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+.lb__close,.lb__nav{position:absolute;color:#fff;cursor:pointer;font-family:var(--latin);opacity:.7;transition:opacity .3s;background:none;border:0}
+.lb__close{top:1.6rem;right:2rem;font-size:1.8rem}.lb__nav{top:50%;transform:translateY(-50%);font-size:2.4rem;padding:1rem}
+.lb__nav--prev{left:1rem}.lb__nav--next{right:1rem}
+.lb__close:hover,.lb__nav:hover{opacity:1}
+.lb__count{position:absolute;bottom:1.6rem;left:50%;transform:translateX(-50%);color:var(--muted);font-family:var(--latin);letter-spacing:.3em;font-size:.8rem}
+
+@media(max-width:880px){
+  .nav__links{position:fixed;inset:0;flex-direction:column;justify-content:center;gap:2.2rem;background:rgba(12,10,8,.97);transform:translateY(-100%);transition:transform .55s var(--ease);backdrop-filter:blur(6px)}
+  .nav__links.open{transform:none}
+  .nav__links a{font-size:1.1rem;letter-spacing:.22em}
+  .nav__toggle{display:block;z-index:51}
+  .nav.menu-open .nav__toggle span:nth-child(1){top:10px;transform:rotate(45deg)}
+  .nav.menu-open .nav__toggle span:nth-child(2){opacity:0}
+  .nav.menu-open .nav__toggle span:nth-child(3){top:10px;transform:rotate(-45deg)}
+  .concept,.detail{grid-template-columns:1fr}
+  .concept__media img{aspect-ratio:4/5}
+  .gallery{columns:2;column-gap:10px}.gallery img{margin-bottom:10px}
+  .trio{grid-template-columns:1fr 1fr}.pair{grid-template-columns:1fr}
+}
+@media(max-width:520px){.gallery{columns:2}.rail__card img{height:440px}}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .hero__slide,.scene__bg,.access__bg{animation:none}.hero__slide:nth-child(1){opacity:1}
+  [data-reveal],.gallery img{opacity:1;transform:none;transition:none}
+  .hero__kicker,.hero__title,.hero__sub,.hero__tag,.hero__cta,.hero__scroll{animation:none;opacity:1}
+}
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <a href="#top" class="nav__logo"><span class="star">✦</span>海庭</a>
+  <nav class="nav__links" id="navLinks">
+    <a href="#concept">コンセプト</a>
+    <a href="#view">眺め</a>
+    <a href="#rooms">部屋</a>
+    <a href="#gallery">ギャラリー</a>
+    <a href="#access">アクセス</a>
+    <a href="tour.html" class="nav__tour">ツアー版 ▷</a>
+    <a href="#book" class="btn">予約</a>
+  </nav>
+  <button class="nav__toggle" id="navToggle" aria-label="メニュー"><span></span><span></span><span></span></button>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero__slide" style="background-image:url('../assets/uminiwa/img-06.jpg')"></div>
+  <div class="hero__slide" style="background-image:url('../assets/uminiwa/img-19.jpg')"></div>
+  <div class="hero__slide" style="background-image:url('../assets/uminiwa/img-23.jpg')"></div>
+  <div class="hero__slide" style="background-image:url('../assets/uminiwa/img-02.jpg')"></div>
+  <div class="hero__scrim"></div>
+  <div class="hero__inner">
+    <p class="hero__kicker">Beppu · Private Villa</p>
+    <h1 class="hero__title">海庭</h1>
+    <p class="hero__sub">uminiwa</p>
+    <p class="hero__tag">海を眺め、庭に憩う。</p>
+    <a href="tour.html" class="hero__cta">バーチャルツアーで歩く <span>▷</span></a>
+  </div>
+  <a href="#concept" class="hero__scroll">Scroll</a>
+</section>
+
+<section id="concept">
+  <div class="wrap concept">
+    <div>
+      <p class="kicker" data-reveal>Concept</p>
+      <h2 class="head" data-reveal data-delay="1">海と、庭と、<br>古い家と。</h2>
+      <div class="lead" data-reveal data-delay="2">
+        <p>別府湾を見下ろす高台に、ひっそりと佇む一棟貸しの宿。</p>
+        <p>窓いっぱいに広がる海、四季をうつす庭、時を重ねた家具。「海庭（うみにわ）」という名のとおり、ここにあるのは海と庭、そして少しの古い時間だけ。</p>
+        <p>なにもしない贅沢を、どうぞ心ゆくまで。</p>
+      </div>
+    </div>
+    <figure class="concept__media" data-reveal data-delay="1">
+      <img src="../assets/uminiwa/img-33.jpg" alt="海庭の看板と別府湾" loading="lazy">
+      <figcaption>海庭 — uminiwa</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="scene" id="view">
+  <img class="scene__bg" src="../assets/uminiwa/img-06.jpg" alt="高台から望む別府湾" loading="lazy">
+  <div class="scene__scrim"></div>
+  <div class="scene__copy">
+    <p class="kicker" data-reveal>The View</p>
+    <h2 class="head" data-reveal data-delay="1">海を、特等席で。</h2>
+    <p class="lead" data-reveal data-delay="2">朝は光をうつす別府湾、夜は街のあかり。デッキに腰かければ、水平線がすぐそこに広がります。</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="pair">
+      <figure data-reveal><img src="../assets/uminiwa/thumb/img-40.jpg" alt="窓辺から見える海" loading="lazy"><figcaption>窓辺から、海へ</figcaption></figure>
+      <figure data-reveal data-delay="1"><img src="../assets/uminiwa/thumb/img-02.jpg" alt="暮れゆく海岸線" loading="lazy"><figcaption>暮れゆく海岸線</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section class="scene scene--b" id="garden">
+  <img class="scene__bg" src="../assets/uminiwa/img-05.jpg" alt="逆光に透ける桜" loading="lazy">
+  <div class="scene__scrim"></div>
+  <div class="scene__copy">
+    <p class="kicker" data-reveal>The Garden</p>
+    <h2 class="head" data-reveal data-delay="1">庭に、季節がめぐる。</h2>
+    <p class="lead" data-reveal data-delay="2">春は桜と椿。縁側の先に、花の季節が静かに広がります。移ろう光を、ただ眺める時間を。</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="padding-top:clamp(3rem,7vw,5rem)">
+    <div class="trio">
+      <figure data-reveal><img src="../assets/uminiwa/thumb/img-19.jpg" alt="桜と別府湾" loading="lazy"></figure>
+      <figure data-reveal data-delay="1"><img src="../assets/uminiwa/thumb/img-39.jpg" alt="満開の桜並木" loading="lazy"></figure>
+      <figure data-reveal data-delay="2"><img src="../assets/uminiwa/thumb/img-11.jpg" alt="椿と桜の庭" loading="lazy"></figure>
+    </div>
+  </div>
+</section>
+
+<section class="scene scene--c" id="rooms">
+  <img class="scene__bg" src="../assets/uminiwa/img-23.jpg" alt="海の見えるリビング" loading="lazy">
+  <div class="scene__scrim"></div>
+  <div class="scene__copy">
+    <p class="kicker" data-reveal>The House</p>
+    <h2 class="head" data-reveal data-delay="1">時を編んだ、一棟貸し。</h2>
+    <p class="lead" data-reveal data-delay="2">レトロな応接間、味わい深い和室、緑のキッチン。古いものと、新しい心地よさが同居する空間です。</p>
+  </div>
+</section>
+
+<section>
+  <div class="rail__hint">← swipe →</div>
+  <div class="rail">
+    <article class="rail__card"><figure><img src="../assets/uminiwa/thumb/img-23.jpg" alt="リビング" loading="lazy"></figure><h3>リビング</h3><span class="en">Living</span></article>
+    <article class="rail__card"><figure><img src="../assets/uminiwa/thumb/img-42.jpg" alt="ダイニング" loading="lazy"></figure><h3>ダイニング</h3><span class="en">Dining</span></article>
+    <article class="rail__card"><figure><img src="../assets/uminiwa/thumb/img-09.jpg" alt="レトロな緑のキッチン" loading="lazy"></figure><h3>キッチン</h3><span class="en">Kitchen</span></article>
+    <article class="rail__card"><figure><img src="../assets/uminiwa/thumb/img-16.jpg" alt="和室" loading="lazy"></figure><h3>和室</h3><span class="en">Japanese Room</span></article>
+    <article class="rail__card"><figure><img src="../assets/uminiwa/thumb/img-03.jpg" alt="二間続きの寝室" loading="lazy"></figure><h3>寝室</h3><span class="en">Bedroom</span></article>
+    <article class="rail__card"><figure><img src="../assets/uminiwa/thumb/img-40.jpg" alt="海の見える窓辺" loading="lazy"></figure><h3>海の見える窓辺</h3><span class="en">Sea Window</span></article>
+  </div>
+</section>
+
+<section>
+  <div class="wrap detail">
+    <figure class="detail__media" data-reveal><img src="../assets/uminiwa/thumb/img-01.jpg" alt="Aesopのアメニティ" loading="lazy"></figure>
+    <div>
+      <p class="kicker" data-reveal>Details</p>
+      <h2 class="head" data-reveal data-delay="1">細部まで、こだわって。</h2>
+      <p class="lead" data-reveal data-delay="2">アメニティはAesop。あかりは提灯。流木のシャンデリアに、アンティークの家具。暮らすように過ごせる、小さくも大切な設えを、ひとつずつ。</p>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <div class="section-head" style="text-align:center">
+      <p class="kicker" data-reveal style="padding:0">Gallery</p>
+      <h2 class="head" data-reveal data-delay="1">海庭の、情景。</h2>
+    </div>
+    <div class="gallery" id="gallery-grid"></div>
+  </div>
+</section>
+
+<section class="access" id="access">
+  <img class="access__bg" src="../assets/uminiwa/img-02.jpg" alt="別府湾沿いの海岸線" loading="lazy">
+  <div class="wrap">
+    <p class="kicker" data-reveal>Access</p>
+    <h2 class="head" data-reveal data-delay="1">大分県、別府。</h2>
+    <p class="lead" data-reveal data-delay="2">別府湾沿いの高台に位置し、別府の温泉街や中心部へもほど近く、観光の拠点に最適です。詳しい住所・道順は、ご予約確定後にご案内いたします。</p>
+    <dl class="info" data-reveal data-delay="2">
+      <div><dt>Location</dt><dd>大分県別府市<br><span style="color:var(--muted);font-size:.86rem">※詳細は予約時にご案内</span></dd></div>
+      <div><dt>Type</dt><dd>一棟貸し／Private villa</dd></div>
+      <div><dt>Access</dt><dd>別府湾沿い・別府ICからほど近く<br><span style="color:var(--muted);font-size:.86rem">※所要時間は要確認</span></dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="cta" id="book">
+  <div class="wrap">
+    <p class="kicker" data-reveal style="padding:0">Reservation</p>
+    <h2 class="head" data-reveal data-delay="1">海と庭で過ごす休日を。</h2>
+    <p class="lead" data-reveal data-delay="2" style="text-align:center;margin-left:auto;margin-right:auto">ご予約・お問い合わせはこちらから。空室状況をご確認のうえ、お気軽にご連絡ください。</p>
+    <div class="cta__btns" data-reveal data-delay="2">
+      <!-- TODO: 予約サイト/Airbnb等のURLに差し替え -->
+      <a href="#" class="btn btn--solid">空室を確認する</a>
+      <a href="#" class="btn btn--ghost">お問い合わせ</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="mark">海庭</div>
+  <div class="en">uminiwa</div>
+  <div class="meta">
+    別府湾を望む一棟貸しの宿<br>
+    大分県別府市<br>
+    <a href="tour.html">バーチャルツアーで歩く ▷</a><br>
+    © 2026 uminiwa
+  </div>
+</footer>
+
+<div class="lb" id="lb">
+  <button class="lb__close" id="lbClose" aria-label="閉じる">✕</button>
+  <button class="lb__nav lb__nav--prev" id="lbPrev" aria-label="前へ">‹</button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb__nav lb__nav--next" id="lbNext" aria-label="次へ">›</button>
+  <div class="lb__count" id="lbCount"></div>
+</div>
+
+<div class="grain"></div>
+
+<script>
+/* curated gallery (全42枚は使わず厳選12枚) */
+(function(){
+  const PICKS=[6,40,23,42,9,16,3,19,5,39,11,1];
+  const pad=n=>String(n).padStart(2,'0');
+  document.getElementById('gallery-grid').innerHTML=PICKS.map(n=>
+    `<img src="../assets/uminiwa/thumb/img-${pad(n)}.jpg" data-full="../assets/uminiwa/img-${pad(n)}.jpg" alt="海庭 ${pad(n)}" loading="lazy">`).join('');
+})();
+
+const nav=document.getElementById('nav'),navLinks=document.getElementById('navLinks'),navToggle=document.getElementById('navToggle');
+let ticking=false;
+function onScroll(){if(!ticking){requestAnimationFrame(()=>{nav.classList.toggle('scrolled',window.scrollY>window.innerHeight*0.82);ticking=false;});ticking=true;}}
+window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+navToggle.addEventListener('click',()=>{navLinks.classList.toggle('open');nav.classList.toggle('menu-open');});
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{navLinks.classList.remove('open');nav.classList.remove('menu-open');}));
+
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.15,rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('[data-reveal]').forEach(el=>io.observe(el));
+
+const gio=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');gio.unobserve(e.target);}});},{threshold:0.08});
+const lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),lbCount=document.getElementById('lbCount');
+let imgs=[],curi=0;
+window.addEventListener('load',()=>{
+  imgs=[...document.querySelectorAll('#gallery-grid img')];
+  imgs.forEach((im,idx)=>{gio.observe(im);im.addEventListener('click',()=>openLB(idx));});
+});
+function openLB(i){curi=i;lbImg.src=imgs[i].dataset.full;lbCount.textContent=(i+1)+' / '+imgs.length;lb.classList.add('open');document.body.style.overflow='hidden';}
+function closeLB(){lb.classList.remove('open');document.body.style.overflow='';}
+function step(d){curi=(curi+d+imgs.length)%imgs.length;lbImg.src=imgs[curi].dataset.full;lbCount.textContent=(curi+1)+' / '+imgs.length;}
+document.getElementById('lbClose').addEventListener('click',closeLB);
+document.getElementById('lbPrev').addEventListener('click',()=>step(-1));
+document.getElementById('lbNext').addEventListener('click',()=>step(1));
+lb.addEventListener('click',e=>{if(e.target===lb)closeLB();});
+document.addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;if(e.key==='Escape')closeLB();if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1);});
+
+/* scroll-linked dolly on scenes (subtle) */
+const scenes=[...document.querySelectorAll('.scene__bg')];
+let sticking=false;
+window.addEventListener('scroll',()=>{
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(sticking)return;sticking=true;
+  requestAnimationFrame(()=>{
+    const h=window.innerHeight;
+    scenes.forEach(bg=>{
+      const r=bg.getBoundingClientRect();
+      if(r.bottom<0||r.top>h){sticking=false;return;}
+      const p=(h-r.top)/(h+r.height);
+      bg.style.transform=`scale(${(1.04+p*0.16).toFixed(3)})`;
+    });
+    sticking=false;
+  });
+},{passive:true});
+
+/* hero parallax */
+const heroInner=document.querySelector('.hero__inner');
+window.addEventListener('scroll',()=>{const y=window.scrollY;if(y<window.innerHeight){heroInner.style.transform='translateY('+(y*0.18)+'px)';heroInner.style.opacity=String(Math.max(0,1-y/(window.innerHeight*0.8)));}},{passive:true});
+</script>
+</body>
+</html>

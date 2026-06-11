@@ -3,3 +3,6 @@ icloud
 *.gdoc
 *.gsheet
 *.gslides
+
+# heavy parallax videos (local only)
+assets/uminiwa/video/
