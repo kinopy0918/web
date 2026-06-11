@@ -86,10 +86,12 @@ html.lenis,html.lenis body{height:auto}
 
 /* nav */
 .nav{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;
-  padding:1.5rem clamp(1.5rem,5vw,3rem);mix-blend-mode:difference}
-.nav .logo{font-family:var(--serif);font-size:1.4rem;letter-spacing:.22em;color:#fff;display:flex;gap:.4em;align-items:center}
+  padding:1.5rem clamp(1.5rem,5vw,3rem)}
+.nav .logo{font-family:var(--serif);font-size:1.4rem;letter-spacing:.22em;color:#fff;display:flex;gap:.4em;align-items:center;text-shadow:0 1px 14px rgba(0,0,0,.55)}
 .nav .logo .star{color:var(--gold)}
-.nav .book{font-size:.78rem;letter-spacing:.2em;border:1px solid #fff;border-radius:999px;padding:.55em 1.4em;color:#fff}
+.nav .book{font-size:.78rem;letter-spacing:.2em;border:1px solid rgba(255,255,255,.72);border-radius:999px;padding:.55em 1.4em;color:#fff;
+  text-shadow:0 1px 8px rgba(0,0,0,.45);backdrop-filter:blur(2px);transition:background .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease)}
+.nav .book:hover{background:var(--gold);border-color:var(--gold);color:#0a0d12;text-shadow:none}
 
 /* progress rail */
 .rail{position:fixed;right:clamp(1rem,2.5vw,2.2rem);top:50%;transform:translateY(-50%);z-index:30;
@@ -147,6 +149,7 @@ html.lenis,html.lenis body{height:auto}
 .kv dd{text-align:right;color:#e6edef;letter-spacing:.04em;font-size:.98rem}
 .kv .note{color:var(--muted);font-size:.76rem}
 .link{display:inline-block;margin-top:1.6em;color:var(--sea);letter-spacing:.06em;border-bottom:1px solid rgba(127,182,201,.4);padding-bottom:.2em}
+.mapembed{grid-column:1/-1;width:100%;height:clamp(260px,38vh,380px);border:0;border-radius:3px;margin-top:1.6rem;filter:grayscale(.5) brightness(.8) contrast(1.05)}
 .tags,.rules{list-style:none;margin-top:2rem}
 .tags{display:flex;flex-wrap:wrap;gap:.7rem}
 .rules{display:flex;flex-direction:column;gap:.95rem}
@@ -244,13 +247,13 @@ html.lenis,html.lenis body{height:auto}
 
       <div class="pblock" id="overview">
         <div class="kicker">Overview</div>
-        <h3>別府湾を一望する、古民家まるごと一棟。</h3>
-        <p class="ptext">浜脇の高台に佇む4LDKの一軒家を、まるごと貸切。水平線と湯けむりの街を独り占めしながら、家族やグループでゆっくりと過ごせます。木の温もりを残した、和モダンの空間です。</p>
+        <h3>別府湾を一望する、昭和レトロな一棟貸し。</h3>
+        <p class="ptext">浜脇の高台に佇む6LDKの一軒家を、まるごと貸切。水平線と湯けむりの街を独り占めしながら、家族やグループでゆっくりと過ごせます。セミダブルベッドの寝室が2部屋、シングル布団も4つ。どこか懐かしい、昭和レトロな空間です。</p>
         <ul class="specs">
           <li><span>Guests</span><b>最大10名</b></li>
-          <li><span>Layout</span><b>4LDK</b></li>
-          <li><span>Bedrooms</span><b>4部屋</b></li>
-          <li><span>Beds</span><b>10台</b></li>
+          <li><span>Layout</span><b>6LDK</b></li>
+          <li><span>Beds</span><b>セミダブル×2</b></li>
+          <li><span>Futon</span><b>シングル×4</b></li>
           <li><span>Bath</span><b>専用2</b></li>
           <li><span>Type</span><b>一棟貸し</b></li>
         </ul>
@@ -270,29 +273,29 @@ html.lenis,html.lenis body{height:auto}
           <div class="kicker">Access</div>
           <h3>大分県別府市・浜脇</h3>
           <p class="ptext">別府湾を見下ろす高台。JR東別府駅から徒歩約6分、駐車場もあります。別府の温泉街や中心部へも近く、観光の拠点に最適です。</p>
-          <p class="ptext small">※正確な住所・道順は、ご予約確定後にご案内します。</p>
-          <a class="link" href="https://www.google.com/maps/search/%E6%9D%B1%E5%88%A5%E5%BA%9C%E9%A7%85" target="_blank" rel="noopener">Googleマップで東別府駅を見る →</a>
+          <a class="link" href="https://maps.app.goo.gl/BWV91pMKN36qAsgk7" target="_blank" rel="noopener">Googleマップで開く →</a>
         </div>
         <dl class="kv">
           <div><dt>Nearest</dt><dd>JR日豊本線 東別府駅 徒歩約6分</dd></div>
-          <div><dt>Check‑in</dt><dd>15:00 – 20:00</dd></div>
-          <div><dt>Check‑out</dt><dd>10:00 <span class="note">（要確認）</span></dd></div>
+          <div><dt>Check‑in</dt><dd>15:00 以降</dd></div>
+          <div><dt>Check‑out</dt><dd>11:00</dd></div>
           <div><dt>Parking</dt><dd>あり</dd></div>
         </dl>
+        <iframe class="mapembed" title="海庭の地図" loading="lazy" src="https://maps.google.com/maps?q=33.265269,131.5150103&amp;z=16&amp;output=embed"></iframe>
       </div>
 
       <div class="pblock" id="around">
         <div class="kicker">Around · 別府八湯</div>
         <h3>湯けむりの街を、めぐる。</h3>
-        <p class="ptext">海庭を拠点に、別府八湯の湯巡りを。徒歩10分の浜脇温泉から、情緒あふれる竹瓦温泉、地獄めぐりで名高い鉄輪温泉まで、個性豊かな名湯が点在。ご宿泊の方には、地元目線の湯巡りガイドをご用意しています。朝湯・昼湯・夜湯、何度でも。</p>
-        <ul class="tags"><li>浜脇温泉 ／ 徒歩10分</li><li>竹瓦温泉</li><li>鉄輪温泉</li><li>地獄めぐり</li></ul>
+        <p class="ptext">海庭を拠点に、別府八湯の湯巡りを。徒歩6分の東町温泉から、情緒あふれる竹瓦温泉、地獄めぐりで名高い鉄輪温泉まで、個性豊かな名湯が点在。ご宿泊の方には、地元目線の湯巡りガイドをご用意しています。朝湯・昼湯・夜湯、何度でも。</p>
+        <ul class="tags"><li>東町温泉 ／ 徒歩6分</li><li>竹瓦温泉</li><li>鉄輪温泉</li><li>地獄めぐり</li></ul>
       </div>
 
       <div class="pblock" id="rules">
         <div class="kicker">House Rules</div>
         <h3>ご利用にあたって</h3>
         <ul class="rules">
-          <li>チェックイン 15:00–20:00</li>
+          <li>チェックイン 15:00以降 ／ チェックアウト 11:00</li>
           <li>定員 10名まで</li>
           <li>禁煙</li>
           <li>ペット不可</li>
@@ -311,10 +314,7 @@ html.lenis,html.lenis body{height:auto}
         <div class="fmark">海庭 <span>uminiwa</span></div>
         <div class="fmeta">
           別府湾を望む一棟貸しの宿 ／ 大分県別府市・浜脇<br>
-          <!-- 法令表示：要記入（保健所申請の届出/許可番号、運営者名） -->
-          住宅宿泊事業 届出番号：<span class="todo">（取得後に掲載）</span><br>
-          運営者：<span class="todo">（要記入）</span><br>
-          <a href="https://www.airbnb.jp/rooms/1703287221221453053" target="_blank" rel="noopener">Airbnbのリスティングを見る →</a>
+          <a href="https://www.instagram.com/uminiwa_beppu/" target="_blank" rel="noopener">Instagram @uminiwa_beppu</a> ／ <a href="https://www.airbnb.jp/rooms/1703287221221453053" target="_blank" rel="noopener">Airbnb →</a>
         </div>
         <div class="fcopy">© 2026 海庭 uminiwa</div>
       </footer>
