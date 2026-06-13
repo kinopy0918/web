@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>海庭 — 海と庭の宿</title>
+<meta name="description" content="海庭。波の音と、庭の静けさ。瀬戸の入江にひらいた、五室だけの小さな宿。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* ============ tokens ============ */
+:root{
+  --bg:#f4f1ea;          /* 生成り */
+  --bg-deep:#ece7dc;
+  --panel:#e6e0d3;
+  --fg:#201d18;          /* 墨 */
+  --muted:#6e675b;
+  --faint:#9a9286;
+  --border:rgba(32,29,24,.12);
+  --border-soft:rgba(32,29,24,.07);
+  --accent:#33524b;      /* 海松（みる）色 */
+  --accent-deep:#26403a;
+  --accent-soft:#5d7d75;
+
+  --maxw:1180px;
+  --measure:38rem;
+
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-in:cubic-bezier(.7,0,.84,0);
+  --ease-spring:cubic-bezier(.34,1.4,.64,1);
+
+  --fs-eyebrow:.78rem;
+  --fs-body:1.0625rem;
+  --fs-lead:1.25rem;
+  --fs-h3:1.5rem;
+  --fs-h2:clamp(1.9rem,4.2vw,2.85rem);
+  --fs-display:clamp(3.2rem,11vw,7.5rem);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:"Zen Kaku Gothic New",system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--fg);
+  font-size:var(--fs-body);
+  line-height:1.8;
+  letter-spacing:.01em;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.mincho{font-family:"Noto Serif JP",serif;}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+
+.wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:clamp(20px,5vw,48px)}
+.eyebrow{
+  font-size:var(--fs-eyebrow);letter-spacing:.32em;text-transform:uppercase;
+  color:var(--accent);font-weight:500;
+}
+.section-label{
+  writing-mode:vertical-rl;font-family:"Noto Serif JP",serif;
+  letter-spacing:.42em;color:var(--faint);font-size:.82rem;
+}
+
+/* ============ nav ============ */
+.nav{
+  position:fixed;inset:0 0 auto 0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:22px clamp(20px,5vw,48px);
+  transition:background .4s var(--ease-out),backdrop-filter .4s var(--ease-out),
+             padding .4s var(--ease-out),border-color .4s var(--ease-out);
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:saturate(140%) blur(14px);
+  -webkit-backdrop-filter:saturate(140%) blur(14px);
+  padding-top:14px;padding-bottom:14px;
+  border-bottom:1px solid var(--border-soft);
+}
+.brand{font-family:"Noto Serif JP",serif;font-size:1.32rem;letter-spacing:.34em;font-weight:500;
+  color:var(--fg);transition:color .4s var(--ease-out)}
+.nav-links{display:flex;gap:34px;align-items:center}
+.nav-links a{font-size:.84rem;letter-spacing:.18em;color:var(--muted);position:relative;
+  transition:color .25s var(--ease-out)}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:100%;height:1px;
+  background:var(--accent);transform:scaleX(0);transform-origin:left;
+  transition:transform .35s var(--ease-out)}
+.nav-links a:hover{color:var(--fg)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{
+  font-size:.82rem;letter-spacing:.14em;padding:11px 22px;border-radius:999px;
+  border:1px solid var(--accent);color:var(--accent);
+  transition:transform .2s var(--ease-out),background .25s var(--ease-out),color .25s var(--ease-out);
+}
+.nav-cta:hover{background:var(--accent);color:var(--bg);transform:translateY(-1px)}
+.nav-cta:active{transform:translateY(0) scale(.98)}
+.nav-toggle{display:none}
+
+/* ============ hero ============ */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;overflow:hidden}
+.hero-canvas{position:absolute;inset:0;z-index:0}
+/* 空〜海〜霧 をCSSで描く */
+.sky{position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,#dfe2dc 0%,#e9e6dc 34%,#f0ece1 50%,
+                    #cdd4cf 50%,#aeb9b4 62%,#8ba39c 78%,#5d7d75 100%);
+}
+.sun{position:absolute;left:50%;top:30%;width:clamp(120px,18vw,220px);aspect-ratio:1;
+  border-radius:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,#fbf6ea 0%,#f3ead6 40%,rgba(243,234,214,0) 70%);
+  filter:blur(2px);animation:rise 14s var(--ease-out) both}
+.sea-shimmer{position:absolute;left:0;right:0;top:50%;bottom:0;
+  background:repeating-linear-gradient(180deg,rgba(255,255,255,.10) 0 2px,transparent 2px 9px);
+  mask-image:linear-gradient(180deg,transparent,#000 40%);opacity:.5;
+  animation:shimmer 9s linear infinite}
+.mist{position:absolute;left:-10%;right:-10%;height:42%;bottom:8%;
+  background:radial-gradient(60% 100% at 50% 100%,rgba(244,241,234,.85),transparent 70%);
+  filter:blur(6px);animation:drift 22s ease-in-out infinite alternate}
+.grain{position:absolute;inset:0;opacity:.04;mix-blend-mode:multiply;pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>")}
+
+.hero-inner{position:relative;z-index:2;width:100%;
+  max-width:var(--maxw);margin-inline:auto;padding:0 clamp(20px,5vw,48px) clamp(56px,9vh,110px)}
+.hero-eyebrow{color:var(--accent-deep);opacity:0;animation:fade-up .9s var(--ease-out) .25s both}
+.hero-title{font-family:"Noto Serif JP",serif;font-weight:400;color:var(--fg);
+  font-size:var(--fs-display);line-height:.98;letter-spacing:.06em;margin:.18em 0 .28em}
+.hero-title span{display:inline-block;opacity:0;transform:translateY(28px);
+  animation:fade-up 1s var(--ease-out) both}
+.hero-title span:nth-child(1){animation-delay:.35s}
+.hero-title span:nth-child(2){animation-delay:.48s}
+.hero-lead{font-family:"Noto Serif JP",serif;font-weight:300;color:#2c2a24;
+  font-size:var(--fs-lead);max-width:30rem;line-height:2;
+  opacity:0;animation:fade-up 1s var(--ease-out) .7s both}
+.scroll-cue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  font-size:.68rem;letter-spacing:.3em;color:var(--accent-deep);
+  opacity:0;animation:fade-up 1s var(--ease-out) 1s both}
+.scroll-cue .line{width:1px;height:46px;background:linear-gradient(var(--accent-deep),transparent);
+  position:relative;overflow:hidden}
+.scroll-cue .line::after{content:"";position:absolute;inset:0;background:var(--bg);
+  animation:scrolldot 2.2s var(--ease-in-out,ease) infinite}
+
+/* ============ generic section ============ */
+section{position:relative}
+.band{padding:clamp(92px,14vh,168px) 0}
+.lead-row{display:grid;grid-template-columns:auto 1fr;gap:clamp(28px,5vw,72px);align-items:start}
+.lead-copy{max-width:var(--measure)}
+.lead-copy h2{font-family:"Noto Serif JP",serif;font-weight:500;font-size:var(--fs-h2);
+  line-height:1.4;letter-spacing:.02em;margin:.5em 0 .8em}
+.lead-copy p{color:#37342d;margin-bottom:1.1em}
+.lead-copy p:last-child{margin-bottom:0}
+.muted{color:var(--muted)}
+
+/* concept split */
+.concept{background:var(--bg-deep)}
+.concept .pair{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(32px,6vw,88px);align-items:center}
+.concept .visual{aspect-ratio:4/5;border-radius:14px;overflow:hidden;position:relative;
+  background:linear-gradient(160deg,#7a978f,#3f5d55 55%,#26403a)}
+.concept .visual::before{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 80% at 70% 10%,rgba(255,255,255,.22),transparent 55%),
+             repeating-linear-gradient(180deg,rgba(255,255,255,.05) 0 1px,transparent 1px 14px)}
+.concept .visual .kanji{position:absolute;right:6%;bottom:5%;writing-mode:vertical-rl;
+  font-family:"Noto Serif JP",serif;font-size:clamp(2.4rem,6vw,4.2rem);color:rgba(255,255,255,.9);
+  letter-spacing:.2em;font-weight:300}
+
+/* rooms */
+.rooms .head{display:flex;justify-content:space-between;align-items:flex-end;
+  flex-wrap:wrap;gap:18px;margin-bottom:clamp(40px,6vw,68px)}
+.room-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.4vw,32px)}
+.room{position:relative}
+.room .ph{aspect-ratio:3/4;border-radius:13px;overflow:hidden;position:relative;
+  border:1px solid var(--border-soft);transition:transform .5s var(--ease-out),box-shadow .5s var(--ease-out)}
+.room .ph::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 55%,rgba(20,28,25,.34))}
+.room:hover .ph{transform:translateY(-6px);
+  box-shadow:0 1px 2px rgba(20,28,25,.05),0 18px 40px rgba(20,28,25,.16)}
+.room .tag{position:absolute;z-index:2;top:14px;left:14px;font-size:.7rem;letter-spacing:.16em;
+  color:#fff;background:rgba(38,64,58,.7);backdrop-filter:blur(4px);padding:5px 11px;border-radius:999px}
+.room .meta{position:absolute;z-index:2;left:16px;bottom:14px;color:#fff}
+.room .meta .name{font-family:"Noto Serif JP",serif;font-size:1.22rem;letter-spacing:.06em}
+.room .meta .sub{font-size:.8rem;opacity:.82;letter-spacing:.08em}
+.r1{background:linear-gradient(155deg,#9bada3,#5c7a71 60%,#3c5750)}
+.r2{background:linear-gradient(155deg,#b6a892,#80715a 60%,#54493a)}
+.r3{background:linear-gradient(155deg,#8fa5ab,#566f74 60%,#37494d)}
+
+/* offerings — 食・湯・庭 */
+.offer{background:var(--accent-deep);color:#eef1ec}
+.offer .eyebrow{color:#a9c6bd}
+.offer .lead-copy h2{color:#fff}
+.offer .lead-copy p{color:#cdd6d0}
+.offer .section-label{color:rgba(255,255,255,.4)}
+.offer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(28px,3vw,56px);
+  margin-top:clamp(48px,7vw,80px)}
+.offer-item{border-top:1px solid rgba(255,255,255,.16);padding-top:24px}
+.offer-item .no{font-family:"Noto Serif JP",serif;font-size:.9rem;color:#8fb3a9;letter-spacing:.2em}
+.offer-item h3{font-family:"Noto Serif JP",serif;font-weight:500;font-size:var(--fs-h3);
+  margin:.4em 0 .5em;letter-spacing:.04em;color:#fff}
+.offer-item p{color:#bcc8c1;font-size:.97rem;line-height:1.85}
+
+/* gallery */
+.gallery .grid{display:grid;grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:160px;gap:14px;margin-top:clamp(40px,6vw,64px)}
+.gallery .cell{border-radius:11px;overflow:hidden;position:relative}
+.gallery .cell::after{content:"";position:absolute;inset:0;background:rgba(20,28,25,0);
+  transition:background .4s var(--ease-out)}
+.gallery .cell:hover::after{background:rgba(20,28,25,.12)}
+.g-tall{grid-row:span 2}
+.g-wide{grid-column:span 2}
+.gc1{background:linear-gradient(150deg,#8aa49b,#46645c)}
+.gc2{background:linear-gradient(150deg,#c0b29a,#7a6a52)}
+.gc3{background:linear-gradient(150deg,#9bb0b5,#4e676c)}
+.gc4{background:linear-gradient(150deg,#9fb39a,#586f4f)}
+.gc5{background:linear-gradient(150deg,#b7a78e,#6e5f48)}
+.gc6{background:linear-gradient(150deg,#7f9c93,#34514a)}
+
+/* cta / access */
+.access{background:var(--bg-deep)}
+.access .cols{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(40px,7vw,96px);align-items:start}
+.cta-box{background:var(--bg);border:1px solid var(--border);border-radius:18px;
+  padding:clamp(30px,4vw,46px)}
+.cta-box h3{font-family:"Noto Serif JP",serif;font-weight:500;font-size:1.6rem;
+  letter-spacing:.04em;margin-bottom:.5em}
+.cta-box p{color:var(--muted);font-size:.96rem;margin-bottom:1.6em}
+.btn{display:inline-flex;align-items:center;gap:12px;justify-content:center;width:100%;
+  background:var(--accent);color:var(--bg);font-size:1rem;letter-spacing:.1em;
+  padding:17px 24px;border-radius:12px;font-family:"Noto Serif JP",serif;
+  transition:transform .2s var(--ease-out),background .25s var(--ease-out),box-shadow .3s var(--ease-out);
+  box-shadow:0 1px 2px rgba(20,28,25,.06),0 8px 22px rgba(38,64,58,.18)}
+.btn:hover{background:var(--accent-deep);transform:translateY(-2px);
+  box-shadow:0 1px 2px rgba(20,28,25,.06),0 14px 30px rgba(38,64,58,.26)}
+.btn:active{transform:translateY(0) scale(.99)}
+.btn .arrow{transition:transform .25s var(--ease-out)}
+.btn:hover .arrow{transform:translateX(4px)}
+.info dl{display:grid;grid-template-columns:auto 1fr;gap:14px 24px;font-size:.96rem}
+.info dt{color:var(--faint);font-size:.82rem;letter-spacing:.14em;padding-top:2px;white-space:nowrap}
+.info dd{color:#37342d;border-bottom:1px solid var(--border-soft);padding-bottom:14px}
+.info dl > dt:last-of-type, .info dl > dd:last-of-type{border-bottom:none}
+
+/* footer */
+footer{background:var(--accent-deep);color:#cdd6d0;padding:clamp(60px,9vw,96px) 0 40px}
+footer .top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;
+  padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.13)}
+footer .brand-f{font-family:"Noto Serif JP",serif;font-size:1.7rem;letter-spacing:.32em;color:#fff}
+footer .tagline{color:#9fb3ab;margin-top:12px;font-size:.92rem;max-width:22rem;line-height:1.9}
+footer .links{display:flex;gap:54px;flex-wrap:wrap}
+footer .links h4{font-size:.74rem;letter-spacing:.2em;color:#7fa097;margin-bottom:16px;text-transform:uppercase}
+footer .links a{display:block;color:#cdd6d0;font-size:.92rem;padding:5px 0;transition:color .2s var(--ease-out)}
+footer .links a:hover{color:#fff}
+footer .base{padding-top:28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-size:.78rem;color:#7fa097;letter-spacing:.06em}
+
+/* ============ reveal ============ */
+.reveal{opacity:0;transform:translateY(22px);
+  transition:opacity .9s var(--ease-out),transform .9s var(--ease-out)}
+.reveal.in{opacity:1;transform:none}
+[data-stagger]>*{opacity:0;transform:translateY(20px);
+  transition:opacity .8s var(--ease-out),transform .8s var(--ease-out)}
+[data-stagger].in>*{opacity:1;transform:none}
+[data-stagger].in>*:nth-child(2){transition-delay:.08s}
+[data-stagger].in>*:nth-child(3){transition-delay:.16s}
+[data-stagger].in>*:nth-child(4){transition-delay:.24s}
+[data-stagger].in>*:nth-child(5){transition-delay:.32s}
+[data-stagger].in>*:nth-child(6){transition-delay:.40s}
+
+/* ============ keyframes ============ */
+@keyframes fade-up{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes rise{from{transform:translate(-50%,-30%);opacity:0}to{transform:translate(-50%,-50%);opacity:1}}
+@keyframes shimmer{from{background-position:0 0}to{background-position:0 -220px}}
+@keyframes drift{from{transform:translateX(-3%)}to{transform:translateX(3%)}}
+@keyframes scrolldot{0%{transform:translateY(-100%)}60%,100%{transform:translateY(100%)}}
+
+/* ============ responsive ============ */
+@media(max-width:880px){
+  .nav-links{position:fixed;inset:0 0 0 auto;width:min(78vw,320px);flex-direction:column;
+    justify-content:center;align-items:flex-start;gap:26px;padding:0 38px;
+    background:var(--bg);box-shadow:-10px 0 40px rgba(20,28,25,.16);
+    transform:translateX(100%);transition:transform .42s var(--ease-out);z-index:60}
+  .nav-links.open{transform:none}
+  .nav-links a{font-size:1.05rem}
+  .nav-cta{margin-top:8px}
+  .nav-toggle{display:flex;flex-direction:column;gap:5px;z-index:61;background:none;border:0;
+    cursor:pointer;padding:6px}
+  .nav-toggle span{width:24px;height:1.5px;background:var(--fg);transition:transform .3s var(--ease-out),opacity .3s}
+  .nav-toggle.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+  .nav-toggle.open span:nth-child(2){opacity:0}
+  .nav-toggle.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+  .concept .pair,.access .cols{grid-template-columns:1fr;gap:40px}
+  .room-grid{grid-template-columns:1fr 1fr}
+  .offer-grid{grid-template-columns:1fr;gap:28px}
+  .lead-row{grid-template-columns:1fr}
+  .section-label{writing-mode:horizontal-tb;letter-spacing:.32em}
+  .gallery .grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:140px}
+}
+@media(max-width:520px){
+  .room-grid{grid-template-columns:1fr}
+  .g-wide{grid-column:span 2}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition-duration:.001ms!important}
+  html{scroll-behavior:auto}
+  .reveal,[data-stagger]>*{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav" id="nav">
+  <a href="#top" class="brand">海庭</a>
+  <button class="nav-toggle" id="toggle" aria-label="メニュー"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="links">
+    <a href="#concept">概念</a>
+    <a href="#rooms">客室</a>
+    <a href="#offer">食・湯・庭</a>
+    <a href="#gallery">情景</a>
+    <a href="#access" class="nav-cta">ご予約</a>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="hero-canvas" aria-hidden="true">
+    <div class="sky"></div>
+    <div class="sun"></div>
+    <div class="sea-shimmer"></div>
+    <div class="mist"></div>
+    <div class="grain"></div>
+  </div>
+  <div class="hero-inner">
+    <p class="eyebrow hero-eyebrow">Seto Inland Sea &nbsp;·&nbsp; 五室の宿</p>
+    <h1 class="hero-title mincho"><span>海と庭の、</span><br /><span>あいだに住まう。</span></h1>
+    <p class="hero-lead">波の音だけが時を刻む入江に、<br />たった五室をひらきました。<br />なにもない贅沢を、どうぞ。</p>
+  </div>
+  <div class="scroll-cue"><span>SCROLL</span><span class="line"></span></div>
+</header>
+
+<!-- ============ CONCEPT ============ -->
+<section class="band concept" id="concept">
+  <div class="wrap pair">
+    <div class="lead-copy reveal">
+      <p class="eyebrow">Concept</p>
+      <h2 class="mincho">満たすのではなく、<br />削ぎ落とすことで、<br />ととのう滞在。</h2>
+      <p>海庭は、瀬戸内のちいさな入江にひらいた一日五組だけの宿です。テレビも、過剰なもてなしもありません。あるのは、移ろう光と、満ち引きする海と、丹精した庭の静けさだけ。</p>
+      <p class="muted">「何もしない」を最上のもてなしと考え、客室・食・湯のすべてを“余白”から設計しました。滞在のあいだ、どうぞ何者でもない時間を。</p>
+    </div>
+    <div class="visual reveal" aria-hidden="true">
+      <span class="kanji mincho">凪</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ROOMS ============ -->
+<section class="band rooms wrap" id="rooms">
+  <div class="head">
+    <div class="reveal">
+      <p class="eyebrow">Rooms</p>
+      <h2 class="mincho" style="font-size:var(--fs-h2);font-weight:500;margin-top:.4em;letter-spacing:.02em">五つの、海への窓。</h2>
+    </div>
+    <p class="muted reveal" style="max-width:24rem;font-size:.95rem">全室がオーシャンフロント。窓辺の縁側から、季節ごとに表情を変える瀬戸の海を独り占めできます。</p>
+  </div>
+  <div class="room-grid" data-stagger>
+    <a class="room" href="#access">
+      <div class="ph r1"></div>
+      <span class="tag">汀 — みぎわ</span>
+      <div class="meta"><div class="name mincho">露天風呂付 海座敷</div><div class="sub">最大3名 ・ 68㎡</div></div>
+    </a>
+    <a class="room" href="#access">
+      <div class="ph r2"></div>
+      <span class="tag">庵 — いおり</span>
+      <div class="meta"><div class="name mincho">庭付き 数寄屋</div><div class="sub">最大2名 ・ 54㎡</div></div>
+    </a>
+    <a class="room" href="#access">
+      <div class="ph r3"></div>
+      <span class="tag">凪 — なぎ</span>
+      <div class="meta"><div class="name mincho">最上階 スイート</div><div class="sub">最大4名 ・ 92㎡</div></div>
+    </a>
+  </div>
+</section>
+
+<!-- ============ OFFERINGS ============ -->
+<section class="band offer" id="offer">
+  <div class="wrap">
+    <div class="lead-row">
+      <div class="section-label reveal">食・湯・庭</div>
+      <div class="lead-copy reveal">
+        <p class="eyebrow">Hospitality</p>
+        <h2 class="mincho">土地のものを、<br />土地の時間で味わう。</h2>
+        <p>その日の海から届いたものだけを、火と塩で。湯は源泉のまま、庭は手入れの跡を消すように。三つのもてなしに、共通する哲学があります。</p>
+      </div>
+    </div>
+    <div class="offer-grid" data-stagger>
+      <div class="offer-item">
+        <span class="no mincho">01</span>
+        <h3>潮の会席</h3>
+        <p>瀬戸の旬を、朝獲れのまま。献立は当日の海まかせ。器は地元の窯元と誂えた一点もので供します。</p>
+      </div>
+      <div class="offer-item">
+        <span class="no mincho">02</span>
+        <h3>入江の湯</h3>
+        <p>海を見下ろす源泉かけ流し。日の出とともに湯気が立ちのぼる、貸切の露天をすべての客室に。</p>
+      </div>
+      <div class="offer-item">
+        <span class="no mincho">03</span>
+        <h3>枯山水の庭</h3>
+        <p>潮風に耐える在来種だけで構えた回遊の庭。縁側に腰かけ、ただ眺める時間を設計しました。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section class="band gallery wrap" id="gallery">
+  <div class="lead-row">
+    <div class="section-label reveal">情景</div>
+    <div class="lead-copy reveal">
+      <p class="eyebrow">Gallery</p>
+      <h2 class="mincho" style="font-weight:500;letter-spacing:.02em">光と、水と、間。</h2>
+    </div>
+  </div>
+  <div class="grid" data-stagger aria-hidden="true">
+    <div class="cell gc1 g-tall"></div>
+    <div class="cell gc2"></div>
+    <div class="cell gc3 g-wide"></div>
+    <div class="cell gc4"></div>
+    <div class="cell gc5 g-wide"></div>
+    <div class="cell gc6 g-tall"></div>
+    <div class="cell gc3"></div>
+    <div class="cell gc1"></div>
+  </div>
+</section>
+
+<!-- ============ ACCESS / CTA ============ -->
+<section class="band access" id="access">
+  <div class="wrap cols">
+    <div class="cta-box reveal">
+      <p class="eyebrow">Reservation</p>
+      <h3 class="mincho">海庭で、<br />何もしない一日を。</h3>
+      <p>ご予約は公式サイトまたはAirbnbより承ります。一日五組限定のため、お早めのご相談をおすすめします。</p>
+      <a href="#" class="btn">空室を確認する <span class="arrow">→</span></a>
+    </div>
+    <div class="info reveal">
+      <p class="eyebrow" style="margin-bottom:22px">Information</p>
+      <dl>
+        <dt>所在地</dt><dd>瀬戸内・入江の宿 海庭<br /><span class="muted" style="font-size:.88rem">※ 正式な住所・届出番号は確定後に記載</span></dd>
+        <dt>客室数</dt><dd>全5室（全室オーシャンフロント・露天風呂付）</dd>
+        <dt>チェックイン</dt><dd>15:00 / アウト 11:00</dd>
+        <dt>アクセス</dt><dd>最寄港より送迎15分 ・ 専用駐車場あり</dd>
+        <dt>ご予約</dt><dd>公式 / Airbnb<br /><span class="muted" style="font-size:.88rem">※ Airbnbリンクは開業後に掲載</span></dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="brand-f mincho">海庭</div>
+        <p class="tagline">海と庭の、あいだに住まう。<br />瀬戸内の入江にひらいた、五室だけの小さな宿。</p>
+      </div>
+      <div class="links">
+        <div>
+          <h4>Stay</h4>
+          <a href="#concept">概念</a>
+          <a href="#rooms">客室</a>
+          <a href="#offer">食・湯・庭</a>
+        </div>
+        <div>
+          <h4>Info</h4>
+          <a href="#gallery">情景</a>
+          <a href="#access">アクセス</a>
+          <a href="#access">ご予約</a>
+        </div>
+      </div>
+    </div>
+    <div class="base">
+      <span>© 2026 海庭 UMINIWA. All rights reserved.</span>
+      <span>瀬戸内 · Seto Inland Sea, Japan</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// nav: scrolled state
+const nav=document.getElementById('nav');
+const onScroll=()=>nav.classList.toggle('scrolled',window.scrollY>40);
+onScroll();addEventListener('scroll',onScroll,{passive:true});
+
+// mobile menu
+const toggle=document.getElementById('toggle'),links=document.getElementById('links');
+toggle.addEventListener('click',()=>{toggle.classList.toggle('open');links.classList.toggle('open')});
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  toggle.classList.remove('open');links.classList.remove('open')}));
+
+// scroll reveal
+const io=new IntersectionObserver((es)=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
+},{threshold:.16,rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.reveal,[data-stagger]').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
